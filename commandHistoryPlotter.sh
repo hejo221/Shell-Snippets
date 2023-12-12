@@ -1,30 +1,31 @@
 #!/bin/bash
 
-# Datei mit Bash-Befehlshistorie
+# Sets up data from Bash Command History
 history_file="$HOME/.bash_history"
 
-# Anzahl der Befehle in der Historie
+# Gets number of commands in Command History
 num_commands=$(wc -l < "$history_file")
 
-# Anzahl der gespeicherten Befehle im Speicher
+# Gets number of saved commands in Command History
 history_size=$(set | grep HISTSIZE | cut -d '=' -f 2)
 
-# Falls die Anzahl der gespeicherten Befehle kleiner ist als die tatsächliche Anzahl,
-# die in der Historie gefunden wurde, schneide die Historie entsprechend ab.
+# Cuts parts of History in case number of saved commands is lesser than number of actual
+# number of commands found in the History
 if [ "$num_commands" -gt "$history_size" ]; then
     num_commands="$history_size"
 fi
 
-# Extrahiere die Befehle aus der Historie und filtere Mehrfachnennungen heraus
+# Extracts commands from History and filters multiples
 commands=$(tail -n "$num_commands" "$history_file" | cut -d ' ' -f 1 | sort | uniq -c)
 
-# Ausgabe der absoluten Häufigkeiten
+# Displays the absolute probabilities
 echo "Absolute Häufigkeiten der genutzten Kommandos:"
 echo "$commands"
 
-# Speichere die Daten für gnuplot in einer Datei
+# Saves the data for gnuplot in an external file
 echo "$commands" | awk '{print $2, $1}' > command_histogram.dat
 
+# Runs gnuplot for vizualization of Command History
 gnuplot <<EOF
 set term pngcairo enhanced font 'Verdana,10'
 set output 'command_histogram.png'

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Sets up data from Bash Command History
+# Gets data from Bash Command History
 history_file="$HOME/.bash_history"
 
 # Gets number of commands in Command History
 num_commands=$(wc -l < "$history_file")
 
-# Gets number of saved commands in Command History
+# Gets size of saved commands in Command History
 history_size=$(set | grep HISTSIZE | cut -d '=' -f 2)
 
 # Cuts parts of History in case number of saved commands is lesser than number of actual
